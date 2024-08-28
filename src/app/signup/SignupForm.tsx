@@ -30,7 +30,7 @@ export function SignupForm() {
         setClientAuthToken(token);
         setUser(user);
 
-        router.push('/dashboard');
+        router.push('/login');
       },
     });
   };
@@ -54,15 +54,6 @@ export function SignupForm() {
         <FormRow label={formatMessage(labels.password)}>
           <FormInput
             data-test="input-password"
-            name="password"
-            rules={{ required: formatMessage(labels.required) }}
-          >
-            <PasswordField />
-          </FormInput>
-        </FormRow>
-        <FormRow label={formatMessage(labels.password)}>
-          <FormInput
-            data-test="input-repassword"
             name="password"
             rules={{ required: formatMessage(labels.required) }}
           >
