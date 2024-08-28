@@ -81,6 +81,7 @@ export const labels = defineMessages({
   analytics: { id: 'label.analytics', defaultMessage: 'Analytics' },
   login: { id: 'label.login', defaultMessage: 'Login' },
   logout: { id: 'label.logout', defaultMessage: 'Logout' },
+  signup: { id: 'label.signup', defaultMessage: 'Sign up' },
   singleDay: { id: 'label.single-day', defaultMessage: 'Single day' },
   dateRange: { id: 'label.date-range', defaultMessage: 'Date range' },
   viewDetails: { id: 'label.view-details', defaultMessage: 'View details' },

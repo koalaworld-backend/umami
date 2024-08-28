@@ -12,16 +12,16 @@ import { useRouter } from 'next/navigation';
 import { useApi, useMessages } from 'components/hooks';
 import { setUser } from 'store/app';
 import { setClientAuthToken } from 'lib/client';
-import Link from 'next/link';
 import Logo from 'assets/logo.svg';
-import styles from './LoginForm.module.css';
+import styles from './SignupForm.module.css';
+import Link from 'next/link';
 
-export function LoginForm() {
+export function SignupForm() {
   const { formatMessage, labels, getMessage } = useMessages();
   const router = useRouter();
   const { post, useMutation } = useApi();
   const { mutate, error, isPending } = useMutation({
-    mutationFn: (data: any) => post('/auth/login', data),
+    mutationFn: (data: any) => post('/auth/signup', data),
   });
 
   const handleSubmit = async (data: any) => {
@@ -40,7 +40,7 @@ export function LoginForm() {
       <Icon className={styles.icon} size="xl">
         <Logo />
       </Icon>
-      <div className={styles.title}>Login our service</div>
+      <div className={styles.title}>Sign up for Our service</div>
       <Form className={styles.form} onSubmit={handleSubmit} error={getMessage(error)}>
         <FormRow label={formatMessage(labels.username)}>
           <FormInput
@@ -60,6 +60,15 @@ export function LoginForm() {
             <PasswordField />
           </FormInput>
         </FormRow>
+        <FormRow label={formatMessage(labels.password)}>
+          <FormInput
+            data-test="input-repassword"
+            name="password"
+            rules={{ required: formatMessage(labels.required) }}
+          >
+            <PasswordField />
+          </FormInput>
+        </FormRow>
         <FormButtons>
           <SubmitButton
             data-test="button-submit"
@@ -67,16 +76,16 @@ export function LoginForm() {
             variant="primary"
             disabled={isPending}
           >
-            {formatMessage(labels.login)}
+            {formatMessage(labels.signup)}
           </SubmitButton>
         </FormButtons>
         <FormRow>
-          <p className={styles.bottom_message}>Don't you have an account?&nbsp;
-          <Link href="/signup">Sign up</Link></p>
+          <p className={styles.bottom_message}>Do you have an account?&nbsp;
+          <Link href="/login">Login</Link></p>
         </FormRow>
       </Form>
     </div>
   );
 }
 
-export default LoginForm;
+export default SignupForm;

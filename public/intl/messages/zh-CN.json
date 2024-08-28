@@ -695,6 +695,12 @@
       "value": "退出"
     }
   ],
+  "label.signup": [
+    {
+      "type": 0,
+      "value": "注册"
+    }
+  ],
   "label.manage": [
     {
       "type": 0,

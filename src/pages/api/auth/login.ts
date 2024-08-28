@@ -48,7 +48,7 @@ export default async (
 
     const user = await getUserByUsername(username, { includePassword: true });
 
-    if (user && checkPassword(password, user.password)) {
+     if (user && checkPassword(password, user.password)) {
       if (redis.enabled) {
         const token = await saveAuth({ userId: user.id });
 
