@@ -82,7 +82,10 @@ const schema = {
 };
 
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
-  console.log("aaaa");
+  console.log("Getting data from ", req.session.hostname);
+  console.log("Session data:");
+  console.log(req.session);
+  
   await useCors(req, res);
 
   if (req.method === 'POST') {
