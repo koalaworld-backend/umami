@@ -82,7 +82,6 @@ const schema = {
 };
 
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
-  console.log("Getting data from ", req.session.hostname);
   console.log("Session data:");
   console.log(req.session);
   
