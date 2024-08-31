@@ -82,21 +82,11 @@ const schema = {
 };
 
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
-  console.log("Session data:");
-  console.log(req.session);
   
   await useCors(req, res);
 
   if (req.method === 'POST') {
-    if (!process.env.DISABLE_BOT_CHECK && isbot(req.headers['user-agent'])) {
-      return ok(res, { beep: 'boop' });
-    }
-
     await useValidate(schema, req, res);
-
-    if (hasBlockedIp(req)) {
-      return forbidden(res);
-    }
 
     const { type, payload } = req.body;
     const { url, referrer, name: eventName, data, title } = payload;
