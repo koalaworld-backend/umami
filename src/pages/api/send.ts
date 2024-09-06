@@ -1,17 +1,13 @@
-import { isbot } from 'isbot';
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
   badRequest,
   createToken,
-  forbidden,
   methodNotAllowed,
-  ok,
   safeDecodeURI,
   send,
 } from 'next-basics';
 import { COLLECTION_TYPE, HOSTNAME_REGEX, IP_REGEX } from 'lib/constants';
 import { secret, visitSalt, uuid } from 'lib/crypto';
-import { hasBlockedIp } from 'lib/detect';
 import { useCors, useSession, useValidate } from 'lib/middleware';
 import { CollectionType, YupRequest } from 'lib/types';
 import { saveEvent, saveSessionData } from 'queries';
