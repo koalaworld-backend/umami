@@ -23,9 +23,9 @@
     hostUrl || '__COLLECT_API_HOST__' || currentScript.src.split('/').slice(0, -1).join('/');
   const endpoint = `${host.replace(/\/$/, '')}__COLLECT_API_ENDPOINT__`;
   const screen = `${width}x${height}`;
-  const eventRegex = /data-umami-event-([\w-_]+)/;
-  const eventNameAttribute = _data + 'umami-event';
-  const delayDuration = 1;
+  const eventRegex = /data-umamistats-event-([\w-_]+)/;
+  const eventNameAttribute = _data + 'umamistats-event';
+  const delayDuration = 300;
 
   /* Helper functions */
 
@@ -192,7 +192,7 @@
     };
 
     if (typeof cache !== 'undefined') {
-      headers['x-umami-cache'] = cache;
+      headers['x-umamistats-cache'] = cache;
     }
 
     try {
@@ -235,8 +235,8 @@
   };
 
   /* Start */
-  if (!window.umami) {
-    window.umami = {
+  if (!window.umamistats) {
+    window.umamistats = {
       track,
     };
   }

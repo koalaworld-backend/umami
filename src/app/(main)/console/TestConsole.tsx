@@ -98,14 +98,14 @@ export function TestConsole({ websiteId }: { websiteId: string }) {
                 <Link href={`/console/${websiteId}/page/2/?q=123 `}>page two</Link>
               </div>
               <div>
-                <a href="https://www.google.com" data-umami-event="external-link-direct">
+                <a href="https://www.google.com" data-umamistats-event="external-link-direct">
                   external link (direct)
                 </a>
               </div>
               <div>
                 <a
                   href="https://www.google.com"
-                  data-umami-event="external-link-tab"
+                  data-umamistats-event="external-link-tab"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -115,33 +115,33 @@ export function TestConsole({ websiteId }: { websiteId: string }) {
             </div>
             <div className={styles.group}>
               <div className={styles.header}>Click events</div>
-              <Button id="send-event-button" data-umami-event="button-click" variant="primary">
+              <Button id="send-event-button" data-umamistats-event="button-click" variant="primary">
                 Send event
               </Button>
               <Button
                 id="send-event-data-button"
-                data-umami-event="button-click"
-                data-umami-event-name="bob"
-                data-umami-event-id="123"
+                data-umamistats-event="button-click"
+                data-umamistats-event-name="bob"
+                data-umamistats-event-id="123"
                 variant="primary"
               >
                 Send event with data
               </Button>
               <Button
                 id="button-with-div-button"
-                data-umami-event="button-click"
-                data-umami-event-name="bob"
-                data-umami-event-id="123"
+                data-umamistats-event="button-click"
+                data-umamistats-event-name="bob"
+                data-umamistats-event-id="123"
                 variant="primary"
               >
                 <div className={styles.wrapped}>Button with div</div>
               </Button>
-              <div data-umami-event="div-click" className={styles.wrapped}>
+              <div data-umamistats-event="div-click" className={styles.wrapped}>
                 DIV with attribute
               </div>
-              <div data-umami-event="div-click-one" className={styles.wrapped}>
-                <div data-umami-event="div-click-two" className={styles.wrapped}>
-                  <div data-umami-event="div-click-three" className={styles.wrapped}>
+              <div data-umamistats-event="div-click-one" className={styles.wrapped}>
+                <div data-umamistats-event="div-click-two" className={styles.wrapped}>
+                  <div data-umamistats-event="div-click-three" className={styles.wrapped}>
                     Nested DIV
                   </div>
                 </div>

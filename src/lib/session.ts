@@ -15,7 +15,7 @@ export async function getSession(req: NextApiRequestCollect): Promise<SessionDat
   }
 
   // Check if cache token is passed
-  const cacheToken = req.headers['x-umami-cache'];
+  const cacheToken = req.headers['x-umamistats-cache'];
 
   if (cacheToken) {
     const result = await parseToken(cacheToken, secret());
