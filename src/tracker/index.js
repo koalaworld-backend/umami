@@ -34,16 +34,6 @@
       return undefined;
     }
 
-    try {
-      const result = decodeURI(str);
-
-      if (result !== str) {
-        return result;
-      }
-    } catch (e) {
-      return str;
-    }
-
     return encodeURI(str);
   };
 
@@ -69,7 +59,6 @@
   });
 
   /* Event handlers */
-
   const handlePush = (state, title, url) => {
     if (!url) return;
 
@@ -248,5 +237,5 @@
   let initialized;
 
   init();
-  document.addEventListener('readystatechange', init, true);
+  //document.addEventListener('readystatechange', init, true);
 })(window);
