@@ -187,7 +187,6 @@
   };
 
   const send = async (payload, type = 'event') => {
-    
     const headers = {
       'Content-Type': 'application/json',
     };
@@ -234,8 +233,6 @@
     }
     return send(getPayload());
   };
-
-  const identify = data => send({ ...getPayload(), data }, 'identify');
 
   /* Start */
   if (!window.umami) {
