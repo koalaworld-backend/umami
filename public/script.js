@@ -44,7 +44,7 @@
                     headers: headers
                 });
             } catch (error) {
-                console.error("Error sending tracking data:", error);
+                // console.error("Error sending tracking data:", error);
             }
         };
 
