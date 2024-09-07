@@ -3,7 +3,6 @@
     screen: { width, height },
     navigator: { language },
     location,
-    localStorage,
     document,
     history,
   } = window;
@@ -13,23 +12,20 @@
   if (!currentScript) return;
 
   const _data = 'data-';
-  const _false = 'false';
   const _true = 'true';
   const attr = currentScript.getAttribute.bind(currentScript);
   const website = attr(_data + 'website-id');
   const hostUrl = attr(_data + 'host-url');
   const tag = attr(_data + 'tag');
-  const autoTrack = attr(_data + 'auto-track') !== _false;
   const excludeSearch = attr(_data + 'exclude-search') === _true;
   const domain = attr(_data + 'domains') || '';
-  const domains = domain.split(',').map(n => n.trim());
   const host =
     hostUrl || '__COLLECT_API_HOST__' || currentScript.src.split('/').slice(0, -1).join('/');
   const endpoint = `${host.replace(/\/$/, '')}__COLLECT_API_ENDPOINT__`;
   const screen = `${width}x${height}`;
   const eventRegex = /data-umami-event-([\w-_]+)/;
   const eventNameAttribute = _data + 'umami-event';
-  const delayDuration = 300;
+  const delayDuration = 1;
 
   /* Helper functions */
 
@@ -190,16 +186,8 @@
     );
   };
 
-  /* Tracking functions */
-
-  const trackingDisabled = () =>
-    !website ||
-    (localStorage && localStorage.getItem('umami.disabled')) ||
-    (domain && !domains.includes(hostname));
-
   const send = async (payload, type = 'event') => {
-    if (trackingDisabled()) return;
-
+    
     const headers = {
       'Content-Type': 'application/json',
     };
@@ -250,11 +238,9 @@
   const identify = data => send({ ...getPayload(), data }, 'identify');
 
   /* Start */
-
   if (!window.umami) {
     window.umami = {
       track,
-      identify,
     };
   }
 
@@ -264,11 +250,6 @@
   let cache;
   let initialized;
 
-  if (autoTrack && !trackingDisabled()) {
-    if (document.readyState === 'complete') {
-      init();
-    } else {
-      document.addEventListener('readystatechange', init, true);
-    }
-  }
+  init();
+  document.addEventListener('readystatechange', init, true);
 })(window);
