@@ -175,26 +175,85 @@
     );
   };
 
-  const send = async (payload, type = 'event') => {
+  // const send = async (payload, type = 'event') => {
+  //   const headers = {
+  //     'Content-Type': 'application/json',
+  //   };
+
+  //   if (typeof cache !== 'undefined') {
+  //     headers['x-umamistats-cache'] = cache;
+  //   }
+
+  //   try {
+  //     const res = await fetch(endpoint, {
+  //       method: 'POST',
+  //       body: JSON.stringify({ type, payload }),
+  //       headers,
+  //     });
+  //     const text = await res.text();
+
+  //     return (cache = text);
+  //   } catch (e) {
+  //     /* empty */
+  //   }
+  // };
+
+
+  const send = (payload, type = 'event') => {
     const headers = {
       'Content-Type': 'application/json',
     };
-
+  
     if (typeof cache !== 'undefined') {
       headers['x-umamistats-cache'] = cache;
     }
-
-    try {
-      const res = await fetch(endpoint, {
+  
+    // Prepare the request data
+    const requestData = JSON.stringify({ type, payload });
+  
+    // Check if fetch is supported
+    if (typeof fetch === 'function') {
+      // Use fetch API
+      return fetch(endpoint, {
         method: 'POST',
-        body: JSON.stringify({ type, payload }),
+        body: requestData,
         headers,
+      })
+        .then(res => res.text())
+        .then(text => {
+          cache = text;
+          return text;
+        })
+        .catch(e => {
+          //console.error('Fetch error:', e);
+        });
+    } else {
+      // Fallback to XMLHttpRequest
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', endpoint, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+  
+        // Set custom header if cache is defined
+        if (typeof cache !== 'undefined') {
+          xhr.setRequestHeader('x-umamistats-cache', cache);
+        }
+  
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              const text = xhr.responseText;
+              cache = text;
+              resolve(text);
+            } else {
+              reject(new Error('Request failed with status ' + xhr.status));
+            }
+          }
+        };
+  
+        // Send the request
+        xhr.send(requestData);
       });
-      const text = await res.text();
-
-      return (cache = text);
-    } catch (e) {
-      /* empty */
     }
   };
 

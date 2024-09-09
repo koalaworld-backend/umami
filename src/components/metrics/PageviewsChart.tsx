@@ -55,7 +55,7 @@ export function PagepageviewsChart({ data, unit, isLoading, ...props }: Pagepage
               },
               {
                 type: 'line',
-                label: `${formatMessage(labels.visitors)} (${formatMessage(labels.previous)})`,
+                label: `${formatMessage(labels.visits)} (${formatMessage(labels.previous)})`,
                 data: data.compare.sessions,
                 borderWidth: 2,
                 backgroundColor: '#f15bb5',
