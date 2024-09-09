@@ -13,7 +13,6 @@ export function salt() {
 }
 
 export function visitSalt() {
-  console.log(startOfHour(new Date()).toUTCString());
   const now: Date = new Date(); // Get the current date and time
 
   // Format the date to YYYY-MM-DD

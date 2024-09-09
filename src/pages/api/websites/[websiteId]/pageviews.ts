@@ -5,7 +5,7 @@ import { getRequestFilters, getRequestDateRange } from 'lib/request';
 import { NextApiRequestQueryBody, WebsitePageviews } from 'lib/types';
 import { NextApiResponse } from 'next';
 import { methodNotAllowed, ok, unauthorized } from 'next-basics';
-import { getPageviewStats, getSessionStats } from 'queries';
+import { getPageviewStats, getSessionStats, getVisitStats } from 'queries';
 import { TimezoneTest, UnitTypeTest } from 'lib/yup';
 import { getCompareDate } from 'lib/date';
 
@@ -76,7 +76,8 @@ export default async (
 
     const [pageviews, sessions] = await Promise.all([
       getPageviewStats(websiteId, filters),
-      getSessionStats(websiteId, filters),
+      // getSessionStats(websiteId, filters),
+      getVisitStats(websiteId, filters)
     ]);
 
     if (compare) {
@@ -92,7 +93,7 @@ export default async (
           startDate: compareStartDate,
           endDate: compareEndDate,
         }),
-        getSessionStats(websiteId, {
+        getVisitStats(websiteId, {
           ...filters,
           startDate: compareStartDate,
           endDate: compareEndDate,

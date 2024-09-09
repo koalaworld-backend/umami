@@ -29,7 +29,7 @@ export function PagepageviewsChart({ data, unit, isLoading, ...props }: Pagepage
     return {
       datasets: [
         {
-          label: formatMessage(labels.visitors),
+          label: formatMessage(labels.visits),
           data: data.sessions,
           borderWidth: 1,
           ...colors.chart.visitors,

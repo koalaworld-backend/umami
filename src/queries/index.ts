@@ -36,3 +36,4 @@ export * from './analytics/getRealtimeData';
 export * from './analytics/getValues';
 export * from './analytics/getWebsiteDateRange';
 export * from './analytics/getWebsiteStats';
+export * from './analytics/visits/getVisitStats';
