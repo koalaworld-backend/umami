@@ -20,7 +20,7 @@ export default function handler(req, res) {
             // Increment the download count
             downloadCount++;
         } else {
-            console.log(`Total Download count during ${lastHour}: `, downloadCount); // Replace this with your database logic
+            console.log(`Total Download count at ${lastHour}: `, downloadCount); // Replace this with your database logic
             lastHour = curHour;
             downloadCount = 0;
         }
