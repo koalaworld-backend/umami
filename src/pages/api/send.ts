@@ -12,6 +12,7 @@ import { useCors, useSession, useValidate } from 'lib/middleware';
 import { CollectionType, YupRequest } from 'lib/types';
 import { saveEvent, saveSessionData } from 'queries';
 import * as yup from 'yup';
+import { startOfHour, startOfMonth } from 'date-fns';
 
 export interface CollectRequestBody {
   payload: {
@@ -78,16 +79,24 @@ const schema = {
 };
 
 let totalRequestCount = 0;
+let lastHour = startOfHour(new Date()).toUTCString();
 
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
   
   await useCors(req, res);
 
   if (req.method === 'POST') {
+    let curHour = startOfHour(new Date()).toUTCString();
+    if (curHour == lastHour) {
+      totalRequestCount++;
+    } else {
+      console.log(`Total Request count at ${lastHour}: `, totalRequestCount);
+      lastHour = curHour;
+      totalRequestCount = 0;
+    }
+
     await useValidate(schema, req, res);
-    totalRequestCount++;
-    console.log("Total Request count: ", totalRequestCount);
-    
+
     const { type, payload } = req.body;
     const { url, referrer, name: eventName, data, title } = payload;
     const pageTitle = safeDecodeURI(title);

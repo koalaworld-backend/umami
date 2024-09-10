@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
+import { startOfHour, startOfMonth } from 'date-fns';
 
 // Preload the script.js file into memory
 const filePath = path.join(process.cwd(), 'public', 'script0.js');
@@ -10,12 +11,19 @@ console.log("content length:", contentLength);
 
 // Simulated database for download count (Replace with your actual database logic)
 let downloadCount = 0;
+let lastHour = startOfHour(new Date()).toUTCString();
 
 export default function handler(req, res) {
     if (req.method === 'GET') {
-        // Increment the download count
-        downloadCount++;
-        console.log(`Total Download count: `, downloadCount); // Replace this with your database logic
+        let curHour = startOfHour(new Date()).toUTCString();
+        if (curHour == lastHour) {
+            // Increment the download count
+            downloadCount++;
+        } else {
+            console.log(`Total Download count during ${lastHour}: `, downloadCount); // Replace this with your database logic
+            lastHour = curHour;
+            downloadCount = 0;
+        }
 
         // Serve the preloaded script.js content
         res.writeHead(200, {
