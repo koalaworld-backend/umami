@@ -92,7 +92,7 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
     let curHour = startOfMinute(new Date()).toUTCString();
     if (curHour == lastHour) {
       totalRequestCount++;
-      console.log("POST /api/send")
+      console.log(new Date(), "POST /api/send")
     } else {
       console.log(`------/api/send Total POST Request count at ${lastHour}: `, totalRequestCount);
       lastHour = curHour;

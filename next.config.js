@@ -171,10 +171,10 @@ const config = {
         source: '/teams/:teamId/:path((?!settings).*)*',
         destination: '/:path*',
       },
-      {
-        source: '/script.js',
-        destination: '/api/script-download', // Proxy to the API route
-    },
+      // {
+      //   source: '/script.js',
+      //   destination: '/api/script-download', // Proxy to the API route
+      // },
     ];
   },
   async redirects() {
