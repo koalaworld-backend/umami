@@ -86,6 +86,9 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
   await useCors(req, res);
 
   if (req.method === 'POST') {
+    
+    await useValidate(schema, req, res);
+
     let curHour = startOfMinute(new Date()).toUTCString();
     if (curHour == lastHour) {
       totalRequestCount++;
@@ -95,8 +98,6 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
       lastHour = curHour;
       totalRequestCount = 0;
     }
-
-    await useValidate(schema, req, res);
 
     const { type, payload } = req.body;
     const { url, referrer, name: eventName, data, title } = payload;
