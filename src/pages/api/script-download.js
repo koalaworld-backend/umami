@@ -19,8 +19,9 @@ export default function handler(req, res) {
         if (curHour == lastHour) {
             // Increment the download count
             downloadCount++;
+            console.log(`Downloaded /script.js`); // Replace this with your database logic
         } else {
-            console.log(`Total Download count at ${lastHour}: `, downloadCount); // Replace this with your database logic
+            console.log(`------ script.js Total Download count at ${lastHour}: `, downloadCount); // Replace this with your database logic
             lastHour = curHour;
             downloadCount = 0;
         }

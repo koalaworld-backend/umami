@@ -90,7 +90,7 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
     if (curHour == lastHour) {
       totalRequestCount++;
     } else {
-      console.log(`Total Request count at ${lastHour}: `, totalRequestCount);
+      console.log(`------/api/send Total POST Request count at ${lastHour}: `, totalRequestCount);
       lastHour = curHour;
       totalRequestCount = 0;
     }
