@@ -77,13 +77,17 @@ const schema = {
   }),
 };
 
+let totalRequestCount = 0;
+
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
   
   await useCors(req, res);
 
   if (req.method === 'POST') {
     await useValidate(schema, req, res);
-
+    totalRequestCount++;
+    console.log("Total Request count: ", totalRequestCount);
+    
     const { type, payload } = req.body;
     const { url, referrer, name: eventName, data, title } = payload;
     const pageTitle = safeDecodeURI(title);
