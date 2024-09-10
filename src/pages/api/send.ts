@@ -12,7 +12,7 @@ import { useCors, useSession, useValidate } from 'lib/middleware';
 import { CollectionType, YupRequest } from 'lib/types';
 import { saveEvent, saveSessionData } from 'queries';
 import * as yup from 'yup';
-import { startOfHour, startOfMonth } from 'date-fns';
+import { startOfHour, startOfMinute } from 'date-fns';
 
 export interface CollectRequestBody {
   payload: {
@@ -79,14 +79,14 @@ const schema = {
 };
 
 let totalRequestCount = 0;
-let lastHour = startOfHour(new Date()).toUTCString();
+let lastHour = startOfMinute(new Date()).toUTCString();
 
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
   
   await useCors(req, res);
 
   if (req.method === 'POST') {
-    let curHour = startOfHour(new Date()).toUTCString();
+    let curHour = startOfMinute(new Date()).toUTCString();
     if (curHour == lastHour) {
       totalRequestCount++;
     } else {

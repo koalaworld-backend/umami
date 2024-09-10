@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
-import { startOfHour, startOfMonth } from 'date-fns';
+import { startOfHour, startOfMinute } from 'date-fns';
 
 // Preload the script.js file into memory
 const filePath = path.join(process.cwd(), 'public', 'script0.js');
@@ -11,11 +11,11 @@ console.log("content length:", contentLength);
 
 // Simulated database for download count (Replace with your actual database logic)
 let downloadCount = 0;
-let lastHour = startOfHour(new Date()).toUTCString();
+let lastHour = startOfMinute(new Date()).toUTCString();
 
 export default function handler(req, res) {
     if (req.method === 'GET') {
-        let curHour = startOfHour(new Date()).toUTCString();
+        let curHour = startOfMinute(new Date()).toUTCString();
         if (curHour == lastHour) {
             // Increment the download count
             downloadCount++;
