@@ -23,7 +23,7 @@ export default function handler(req, res) {
         } else {
             console.log(`------ script.js Total Download count at ${lastHour}: `, downloadCount); // Replace this with your database logic
             lastHour = curHour;
-            downloadCount = 0;
+            downloadCount = 1;
         }
 
         // Serve the preloaded script.js content
