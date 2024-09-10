@@ -17,7 +17,9 @@
   const tag = attr(_data + 'tag');
   const host =
     hostUrl || '__COLLECT_API_HOST__' || currentScript.src.split('/').slice(0, -1).join('/');
+    console.log("host", host);
   const endpoint = `${host.replace(/\/$/, '')}__COLLECT_API_ENDPOINT__`;
+  console.log("endpoint", endpoint);
   const screen = `${width}x${height}`;
 
   /* Helper functions */
@@ -63,13 +65,6 @@
     }
   };
 
-  const init = () => {
-    if (!initialized) {
-      track();
-       initialized = true;
-    }
-  };
-
   const track = (obj, data) => {
     if (typeof obj === 'string') {
       return send({
@@ -88,7 +83,19 @@
   let currentUrl = href;
   let currentRef = referrer !== hostname ? referrer : '';
   let cache;
-  let initialized;
+  let initialized = false;
 
-  init();
+  const trackFunction = () => {
+    if (initialized) {
+      track();
+    }
+  };
+
+  // Check if Umami.Init is called
+  window.Umami = window.Umami || {};
+  window.Umami.Init = () => {
+    initialized = true;
+    trackFunction();
+  };
+
 })(window);
