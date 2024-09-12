@@ -35,22 +35,21 @@
     screen,
     language,
     title: "",
-    url: encode(currentUrl),
-    referrer: encode(currentRef),
-    tag: tag ? tag : undefined,
+    url: encode(currentUrl) || "",
+    referrer: encode(currentRef) || "",
+    tag: tag ? tag : "",
   });
 
+  // Function to convert an object to a URL-encoded string
+  const toUrlEncoded = (obj) => {
+    return Object.keys(obj)
+      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
+      .join('&');
+  };
+
   const send = (payload, type = 'event') => {
-    // const headers = {
-    //   'Content-Type': 'application/json',
-    // };
-
-    // if (typeof cache !== 'undefined') {
-    //   headers['x-umamistats-cache'] = cache;
-    // }
-
-    // Prepare the request data
-    const requestData = JSON.stringify({ type, payload });
+    
+    const urlEncodedPayload = toUrlEncoded(payload);
 
     try {
       var xhr = new XMLHttpRequest();
@@ -62,13 +61,7 @@
         }
       };
       xhr.setRequestHeader('Content-Type', 'text/plain');
-
-      // Set custom header if cache is defined
-      // if (typeof cache !== 'undefined') {
-      //   xhr.setRequestHeader('x-umamistats-cache', cache);
-      // }
-     // xhr.withCredentials = true;
-      xhr.send(requestData);
+      xhr.send(urlEncodedPayload);
     } catch (error) {
       //console.log('error', error);
     }
@@ -119,20 +112,20 @@
     // }
   };
 
-  const track = (obj, data) => {
-    if (typeof obj === 'string') {
-      return send({
-        ...getPayload(),
-        name: obj,
-        data: typeof data === 'object' ? data : undefined,
-      });
-    } else if (typeof obj === 'object') {
-      return send(obj);
-    } else if (typeof obj === 'function') {
-      return send(obj(getPayload()));
-    }
-    return send(getPayload());
-  };
+  // const track = (obj, data) => {
+  //   if (typeof obj === 'string') {
+  //     return send({
+  //       ...getPayload(),
+  //       name: obj,
+  //       data: typeof data === 'object' ? data : undefined,
+  //     });
+  //   } else if (typeof obj === 'object') {
+  //     return send(obj);
+  //   } else if (typeof obj === 'function') {
+  //     return send(obj(getPayload()));
+  //   }
+  //   return send(getPayload());
+  // };
 
   let currentUrl = href;
   let currentRef = referrer !== hostname ? referrer : '';
@@ -152,6 +145,6 @@
   //   trackFunction();
   // };
 
-  track();
+  send(getPayload());
 
 })(window);

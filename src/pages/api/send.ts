@@ -13,6 +13,7 @@ import { CollectionType, YupRequest } from 'lib/types';
 import { saveEvent, saveSessionData } from 'queries';
 import * as yup from 'yup';
 import { startOfHour, startOfMinute } from 'date-fns';
+import { parse } from 'querystring';
 
 export interface CollectRequestBody {
   payload: {
@@ -78,33 +79,14 @@ const schema = {
   }),
 };
 
-let totalRequestCount = 1;
-let acceptedRequestCount = 1;
-let lastHour = startOfMinute(new Date()).toUTCString();
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   
   await useCors(req, res);
   
   if (req.method === 'POST') {
-    let curHour = startOfMinute(new Date()).toUTCString();
-    if (curHour == lastHour) {
-      totalRequestCount++;
-      console.log(new Date(), "POST /api/send")
-    } else {
-      console.log(`------/api/send Total POST Request count at ${lastHour}: `, totalRequestCount);
-      lastHour = curHour;
-      totalRequestCount = 1;
-    }
-
     let reqBody = {};
-    try {
-      reqBody = JSON.parse(req.body);
-    } catch (error) {
-      console.error('Error parsing JSON:', error);
-    }
-
-    req.body = {...reqBody}
+    reqBody = parse(req.body);
+    req.body = {type: "event", payload: {...reqBody}}
     let reqCollect = req as NextApiRequestCollect
 
     const { type, payload } = req.body;
