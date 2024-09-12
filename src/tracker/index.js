@@ -7,6 +7,7 @@
   } = window;
   const { hostname, href } = location;
   const { currentScript, referrer } = document;
+  console.log(document.referrer);
 
   if (!currentScript) return;
 
@@ -43,7 +44,8 @@
   const send = (payload, type = 'event') => {
 
     // Prepare the request data
-    const requestData = `{"type":"event","payload":{"website":"${payload.website}","hostname":"${payload.hostname}","screen":"${payload.screen}","language":"${payload.language}","title":"${payload.title}","url":"${payload.url}"}}`;
+    const requestData = `{"type":"event","payload":{"website":"${payload.website}","hostname":"${payload.hostname}","screen":"${payload.screen}","language":"${payload.language}","title":"${payload.title}","url":"${payload.url}", "referrer":"${payload.referrer}", "tag":"${payload.tag}"}}`;
+    console.log(requestData);
 
     try {
       var xhr = new XMLHttpRequest();
