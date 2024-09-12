@@ -80,21 +80,39 @@ const schema = {
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  
+
   await useCors(req, res);
-  
+
   if (req.method === 'POST') {
     let reqBody: any;
-    console.log("original req.body", req.body);  
-    try {
-      reqBody = JSON.parse(req.body);
-    } catch (error) {
-      console.error('Error parsing JSON:', error);
+    console.log("original req.body", req.body);
+    if (typeof req.body === 'string') {
+      console.log("trying to parse req.body string")
+      try {
+        // Try to parse the string as JSON
+        reqBody = JSON.parse(req.body);
+      } catch (error) {
+        console.error('Error parsing JSON from string:', error);
+        // Handle the error as needed
+        reqBody = null; // or some default value
+        return;
+      }
+    } else if (typeof req.body === 'object') {
+      console.log("directly passed to reqVBody")
+      // If it's already an object, directly assign it
+      reqBody = req.body;
+    } else {
+      // Handle unexpected types
+      console.error('Unexpected type for res.body:', typeof req.body);
+      reqBody = null; // or some default value
+      return;
     }
+
     console.log("reqBody:", reqBody);
-    req.body = {...reqBody}
+    req.body = { ...reqBody }
     console.log("res.body", req.body);
     let reqCollect = req as NextApiRequestCollect
+    console.log("reqCollect", reqCollect.body);
 
     const { type, payload } = reqBody;
     const { url, referrer, name: eventName, data, title } = payload;
@@ -115,7 +133,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (type === COLLECTION_TYPE.event) {
       // eslint-disable-next-line prefer-const
       let [urlPath, urlQuery] = safeDecodeURI(url)?.split('?') || [];
+      console.log('urlPath', urlPath);
       let [referrerPath, referrerQuery] = safeDecodeURI(referrer)?.split('?') || [];
+      console.log('referrerPath', referrerPath);
       let referrerDomain = '';
 
       if (!urlPath) {

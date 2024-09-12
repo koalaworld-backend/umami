@@ -27,8 +27,19 @@
       return undefined;
     }
 
+    try {
+      const result = decodeURI(str);
+
+      if (result !== str) {
+        return result;
+      }
+    } catch (e) {
+      return str;
+    }
+
     return encodeURI(str);
   };
+
 
   const parseURL = url => {
     try {
@@ -56,26 +67,43 @@
     // Prepare the request data
     const requestData = `{"type":"event","payload":{"website":"${payload.website}","hostname":"${payload.hostname}","screen":"${payload.screen}","language":"${payload.language}","title":"${payload.title}","url":"${payload.url}", "referrer":"${payload.referrer}", "tag":"${payload.tag}"}}`;
 
+    const headers = {
+      'Content-Type': 'text/plain',
+    };
+
     try {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", endpoint, false);
-      xhr.onreadystatechange = function () {
-        if ((this.status >= 200 && this.status < 300)) {
-          const text = xhr.responseText;
-          cache = text;
-        }
-      };
-      xhr.setRequestHeader('Content-Type', 'text/plain');
-      xhr.send(requestData);
-    } catch (error) {
-      //console.log('error', error);
+      fetch(endpoint, {
+        method: 'POST',
+        body: requestData,
+        headers,
+      });
+    } catch (e) {
+      /* empty */
     }
+
+
+    // try {
+    //   var xhr = new XMLHttpRequest();
+    //   xhr.open("POST", endpoint, false);
+    //   xhr.setRequestHeader('Content-Type', 'text/plain');
+    //   xhr.onreadystatechange = function () {
+    //     if ((this.status >= 200 && this.status < 300)) {
+    //       const text = xhr.responseText;
+    //       cache = text;
+    //     }
+    //   };
+    //   xhr.send(requestData);
+    // } catch (error) {
+    //   //console.log('error', error);
+    // }
   };
 
   let currentUrl = parseURL(href);
   let currentRef = referrer !== hostname ? referrer : '';
   let cache;
 
-  send(getPayload());
-
+  setTimeout(()=>{
+    send(getPayload());
+  }, 20);
+  
 })(window);
