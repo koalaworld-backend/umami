@@ -76,8 +76,8 @@ export default async (
 
     const [pageviews, sessions] = await Promise.all([
       getPageviewStats(websiteId, filters),
-      // getSessionStats(websiteId, filters),
-      getVisitStats(websiteId, filters)
+      getSessionStats(websiteId, filters),
+      //getVisitStats(websiteId, filters)
     ]);
 
     if (compare) {
@@ -93,11 +93,16 @@ export default async (
           startDate: compareStartDate,
           endDate: compareEndDate,
         }),
-        getVisitStats(websiteId, {
+        getSessionStats(websiteId, {
           ...filters,
           startDate: compareStartDate,
           endDate: compareEndDate,
         }),
+        // getSessionStats(websiteId, {
+        //   ...filters,
+        //   startDate: compareStartDate,
+        //   endDate: compareEndDate,
+        // }),
       ]);
 
       return ok(res, {
