@@ -100,29 +100,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     let reqBody = {};
     try {
       reqBody = JSON.parse(req.body);
-      console.log(reqBody);
     } catch (error) {
       console.error('Error parsing JSON:', error);
     }
 
     req.body = {...reqBody}
-    let req1 = req as NextApiRequestCollect
-
-    if (curHour == lastHour) {
-      acceptedRequestCount++;
-    } else {
-      console.log(`------/api/send Total Validated POST Request count at ${lastHour}: `, acceptedRequestCount);
-      lastHour = curHour;
-      acceptedRequestCount = 1;
-    }
+    let reqCollect = req as NextApiRequestCollect
 
     const { type, payload } = req.body;
     const { url, referrer, name: eventName, data, title } = payload;
     const pageTitle = safeDecodeURI(title);
 
-    await useSession(req1, res);
+    await useSession(reqCollect, res);
 
-    const session = req1.session;
+    const session = reqCollect.session;
     const iat = Math.floor(new Date().getTime() / 1000);
 
     // expire visitId after 30 minutes

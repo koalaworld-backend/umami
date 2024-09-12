@@ -36,11 +36,11 @@ export function UpdateNotice({ user, config }) {
     setDismissed(true);
   }
 
-  useEffect(() => {
-    if (allowUpdate) {
-      checkVersion();
-    }
-  }, [allowUpdate]);
+  // useEffect(() => {
+  //   if (allowUpdate) {
+  //     checkVersion();
+  //   }
+  // }, [allowUpdate]);
 
   if (!allowUpdate || !hasUpdate) {
     return null;
