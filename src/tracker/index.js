@@ -9,8 +9,6 @@
   var currentScript = document.currentScript || document.getElementsByTagName('script')[document.getElementsByTagName('script').length - 1];
   var referrer = document.referrer;
 
-  console.log(referrer);
-
   if (!currentScript) return;
 
   var _data = 'data-';
@@ -74,7 +72,6 @@
     };
 
     if (typeof fetch === 'function') {
-      console.log('use fetch');
       try {
         fetch(endpoint, {
           method: 'POST',
@@ -97,7 +94,6 @@
         };
         xhr.send(requestData);
       } catch (error) {
-        //console.log('error', error);
       }
     }
   }
@@ -106,8 +102,6 @@
   var currentRef = referrer !== hostname ? referrer : '';
   var cache;
 
-  setTimeout(function() {
-    send(getPayload());
-  }, 20);
+  send(getPayload());
 
 })(window);

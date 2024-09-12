@@ -110,9 +110,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     console.log("reqBody:", reqBody);
     req.body = { ...reqBody }
-    console.log("res.body", req.body);
     let reqCollect = req as NextApiRequestCollect
-    console.log("reqCollect", reqCollect.body);
 
     const { type, payload } = reqBody;
     const { url, referrer, name: eventName, data, title } = payload;
@@ -133,9 +131,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (type === COLLECTION_TYPE.event) {
       // eslint-disable-next-line prefer-const
       let [urlPath, urlQuery] = safeDecodeURI(url)?.split('?') || [];
-      console.log('urlPath', urlPath);
       let [referrerPath, referrerQuery] = safeDecodeURI(referrer)?.split('?') || [];
-      console.log('referrerPath', referrerPath);
       let referrerDomain = '';
 
       if (!urlPath) {
