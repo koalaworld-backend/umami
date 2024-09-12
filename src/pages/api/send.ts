@@ -84,18 +84,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   await useCors(req, res);
   
   if (req.method === 'POST') {
-    let reqBody = {};
-    
+    let reqBody: any;
+    console.log("original req.body", req.body);  
     try {
       reqBody = JSON.parse(req.body);
     } catch (error) {
       console.error('Error parsing JSON:', error);
     }
-
+    console.log("reqBody:", reqBody);
     req.body = {...reqBody}
+    console.log("res.body", req.body);
     let reqCollect = req as NextApiRequestCollect
 
-    const { type, payload } = req.body;
+    const { type, payload } = reqBody;
     const { url, referrer, name: eventName, data, title } = payload;
     const pageTitle = safeDecodeURI(title);
 

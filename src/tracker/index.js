@@ -30,6 +30,16 @@
     return encodeURI(str);
   };
 
+  const parseURL = url => {
+    try {
+      const { pathname, search } = new URL(url);
+      url = pathname + search;
+    } catch (e) {
+      /* empty */
+    }
+    return url;
+  };
+
   const getPayload = () => ({
     website,
     hostname,
@@ -62,7 +72,7 @@
     }
   };
 
-  let currentUrl = href;
+  let currentUrl = parseURL(href);
   let currentRef = referrer !== hostname ? referrer : '';
   let cache;
 
