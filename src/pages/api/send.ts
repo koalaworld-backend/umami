@@ -85,9 +85,8 @@ let lastHour = startOfMinute(new Date()).toUTCString();
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
   
   await useCors(req, res);
-
+  
   if (req.method === 'POST') {
-    
     let curHour = startOfMinute(new Date()).toUTCString();
     if (curHour == lastHour) {
       totalRequestCount++;
@@ -98,12 +97,10 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
       totalRequestCount = 1;
     }
 
-
     await useValidate(schema, req, res);
 
     if (curHour == lastHour) {
       acceptedRequestCount++;
-      console.log(new Date(), "POST /api/send")
     } else {
       console.log(`------/api/send Total Validated POST Request count at ${lastHour}: `, acceptedRequestCount);
       lastHour = curHour;

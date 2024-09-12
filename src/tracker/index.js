@@ -59,15 +59,14 @@
         if ((this.status >= 200 && this.status < 300)) {
           const text = xhr.responseText;
           cache = text;
-          console.log('cache', cache);
         }
       };
       xhr.setRequestHeader('Content-Type', 'application/json');
 
       // Set custom header if cache is defined
-      if (typeof cache !== 'undefined') {
-        xhr.setRequestHeader('x-umamistats-cache', cache);
-      }
+      // if (typeof cache !== 'undefined') {
+      //   xhr.setRequestHeader('x-umamistats-cache', cache);
+      // }
      // xhr.withCredentials = true;
       xhr.send(requestData);
     } catch (error) {
