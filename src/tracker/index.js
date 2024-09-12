@@ -5,9 +5,8 @@
     location,
     document,
   } = window;
-  const { hostname, href } = location;
+  const { hostname, href, pathname, search } = location;
   const { currentScript, referrer } = document;
-
   if (!currentScript) return;
 
   const _data = 'data-';
@@ -34,7 +33,7 @@
     hostname,
     screen,
     language,
-    title: "",
+    title: title ? encodeURIComponent(title) : "",
     url: encode(currentUrl) || "",
     referrer: encode(currentRef) || "",
     tag: tag ? tag : "",
@@ -48,7 +47,7 @@
   };
 
   const send = (payload, type = 'event') => {
-    
+
     const urlEncodedPayload = toUrlEncoded(payload);
 
     try {
@@ -65,85 +64,12 @@
     } catch (error) {
       //console.log('error', error);
     }
-
-    // // Check if fetch is supported
-    // if (typeof fetch === 'function') {
-    //   // Use fetch API
-    //   return fetch(endpoint, {
-    //     method: 'POST',
-    //     body: requestData,
-    //     headers,
-    //   })
-    //     .then(res => res.text())
-    //     .then(text => {
-    //       cache = text;
-    //       return text;
-    //     })
-    //     .catch(e => {
-    //       //console.error('Fetch error:', e);
-    //     });
-    // } else {
-    //   // Fallback to XMLHttpRequest
-    //   return new Promise((resolve, reject) => {
-    //     const xhr = new XMLHttpRequest();
-    //     xhr.open('POST', endpoint, true);
-    //     xhr.setRequestHeader('Content-Type', 'application/json');
-
-    //     // Set custom header if cache is defined
-    //     if (typeof cache !== 'undefined') {
-    //       xhr.setRequestHeader('x-umamistats-cache', cache);
-    //     }
-
-    //     xhr.onreadystatechange = () => {
-    //       if (xhr.readyState === XMLHttpRequest.DONE) {
-    //         if (xhr.status >= 200 && xhr.status < 300) {
-    //           const text = xhr.responseText;
-    //           cache = text;
-    //           resolve(text);
-    //         } else {
-    //           reject(new Error('Request failed with status ' + xhr.status));
-    //         }
-    //       }
-    //     };
-
-    //     // Send the request
-    //     xhr.send(requestData);
-    //   });
-    // }
   };
 
-  // const track = (obj, data) => {
-  //   if (typeof obj === 'string') {
-  //     return send({
-  //       ...getPayload(),
-  //       name: obj,
-  //       data: typeof data === 'object' ? data : undefined,
-  //     });
-  //   } else if (typeof obj === 'object') {
-  //     return send(obj);
-  //   } else if (typeof obj === 'function') {
-  //     return send(obj(getPayload()));
-  //   }
-  //   return send(getPayload());
-  // };
-
-  let currentUrl = href;
+  let currentUrl = `${pathname}${search}`;
   let currentRef = referrer !== hostname ? referrer : '';
+  let title = document.title;
   let cache;
-  // let initialized = false;
-
-  // const trackFunction = () => {
-  //   if (initialized) {
-  //     track();
-  //   }
-  // };
-
-  // Check if Umami.Init is called
-  // window.Umami = window.Umami || {};
-  // window.Umami.Init = () => {
-  //   initialized = true;
-  //   trackFunction();
-  // };
 
   send(getPayload());
 
