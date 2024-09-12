@@ -105,7 +105,7 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
       acceptedRequestCount++;
       console.log(new Date(), "POST /api/send")
     } else {
-      console.log(`------/api/send Total Accepted POST Request count at ${lastHour}: `, acceptedRequestCount);
+      console.log(`------/api/send Total Validated POST Request count at ${lastHour}: `, acceptedRequestCount);
       lastHour = curHour;
       acceptedRequestCount = 1;
     }
