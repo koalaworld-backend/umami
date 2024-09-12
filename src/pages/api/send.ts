@@ -85,8 +85,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   
   if (req.method === 'POST') {
     let reqBody = {};
-    reqBody = parse(req.body);
-    req.body = {type: "event", payload: {...reqBody}}
+    
+    try {
+      reqBody = JSON.parse(req.body);
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+    }
+
+    req.body = {...reqBody}
     let reqCollect = req as NextApiRequestCollect
 
     const { type, payload } = req.body;

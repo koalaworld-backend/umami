@@ -5,8 +5,9 @@
     location,
     document,
   } = window;
-  const { hostname, href, pathname, search } = location;
+  const { hostname, href } = location;
   const { currentScript, referrer } = document;
+
   if (!currentScript) return;
 
   const _data = 'data-';
@@ -33,26 +34,20 @@
     hostname,
     screen,
     language,
-    title: title ? encodeURIComponent(title) : "",
-    url: encode(currentUrl) || "",
-    referrer: encode(currentRef) || "",
-    tag: tag ? tag : "",
+    title: "",
+    url: encode(currentUrl),
+    referrer: encode(currentRef),
+    tag: tag ? tag : undefined,
   });
-
-  // Function to convert an object to a URL-encoded string
-  const toUrlEncoded = (obj) => {
-    return Object.keys(obj)
-      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
-      .join('&');
-  };
 
   const send = (payload, type = 'event') => {
 
-    const urlEncodedPayload = toUrlEncoded(payload);
+    // Prepare the request data
+    const requestData = `{"type":"event","payload":{"website":"${payload.website}","hostname":"${payload.hostname}","screen":"${payload.screen}","language":"${payload.language}","title":"${payload.title}","url":"${payload.url}"}}`;
 
     try {
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", endpoint, false); // Change true to false to make it synchronous
+      xhr.open("POST", endpoint, false);
       xhr.onreadystatechange = function () {
         if ((this.status >= 200 && this.status < 300)) {
           const text = xhr.responseText;
@@ -60,15 +55,14 @@
         }
       };
       xhr.setRequestHeader('Content-Type', 'text/plain');
-      xhr.send(urlEncodedPayload);
+      xhr.send(requestData);
     } catch (error) {
       //console.log('error', error);
     }
   };
 
-  let currentUrl = `${pathname}${search}`;
+  let currentUrl = href;
   let currentRef = referrer !== hostname ? referrer : '';
-  let title = document.title;
   let cache;
 
   send(getPayload());
