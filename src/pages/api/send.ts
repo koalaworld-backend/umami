@@ -78,7 +78,8 @@ const schema = {
   }),
 };
 
-let totalRequestCount = 0;
+let totalRequestCount = 1;
+let acceptedRequestCount = 1;
 let lastHour = startOfMinute(new Date()).toUTCString();
 
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
@@ -87,8 +88,6 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
 
   if (req.method === 'POST') {
     
-    await useValidate(schema, req, res);
-
     let curHour = startOfMinute(new Date()).toUTCString();
     if (curHour == lastHour) {
       totalRequestCount++;
@@ -97,6 +96,18 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
       console.log(`------/api/send Total POST Request count at ${lastHour}: `, totalRequestCount);
       lastHour = curHour;
       totalRequestCount = 1;
+    }
+
+
+    await useValidate(schema, req, res);
+
+    if (curHour == lastHour) {
+      acceptedRequestCount++;
+      console.log(new Date(), "POST /api/send")
+    } else {
+      console.log(`------/api/send Total Accepted POST Request count at ${lastHour}: `, acceptedRequestCount);
+      lastHour = curHour;
+      acceptedRequestCount = 1;
     }
 
     const { type, payload } = req.body;
