@@ -85,9 +85,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === 'POST') {
     let reqBody: any;
-    console.log("original req.body", req.body);
     if (typeof req.body === 'string') {
-      console.log("trying to parse req.body string")
       try {
         // Try to parse the string as JSON
         reqBody = JSON.parse(req.body);
@@ -98,7 +96,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
     } else if (typeof req.body === 'object') {
-      console.log("directly passed to reqVBody")
       // If it's already an object, directly assign it
       reqBody = req.body;
     } else {
@@ -108,7 +105,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
 
-    console.log("reqBody:", reqBody);
     req.body = { ...reqBody }
     let reqCollect = req as NextApiRequestCollect
 

@@ -87,10 +87,7 @@
         xhr.open("POST", endpoint, false);
         xhr.setRequestHeader('Content-Type', 'text/plain');
         xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && (xhr.status >= 200 && xhr.status < 300)) {
-            var text = xhr.responseText;
-            cache = text;
-          }
+          
         };
         xhr.send(requestData);
       } catch (error) {
