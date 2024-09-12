@@ -1,34 +1,34 @@
-(window => {
-  const {
-    screen: { width, height },
-    navigator: { language },
-    location,
-    document,
-  } = window;
-  const { hostname, href } = location;
-  const { currentScript, referrer } = document;
-  console.log(document.referrer);
+(function(window) {
+  var screenWidth = window.screen.width;
+  var screenHeight = window.screen.height;
+  var language = window.navigator.language;
+  var location = window.location;
+  var document = window.document;
+  var hostname = location.hostname;
+  var href = location.href;
+  var currentScript = document.currentScript || document.getElementsByTagName('script')[document.getElementsByTagName('script').length - 1];
+  var referrer = document.referrer;
+
+  console.log(referrer);
 
   if (!currentScript) return;
 
-  const _data = 'data-';
-  const attr = currentScript.getAttribute.bind(currentScript);
-  const website = attr(_data + 'website-id');
-  const hostUrl = attr(_data + 'host-url');
-  const tag = attr(_data + 'tag');
-  const host =
-    hostUrl || '__COLLECT_API_HOST__' || currentScript.src.split('/').slice(0, -1).join('/');
-  const endpoint = `${host.replace(/\/$/, '')}__COLLECT_API_ENDPOINT__`;
-  const screen = `${width}x${height}`;
+  var _data = 'data-';
+  var website = currentScript.getAttribute(_data + 'website-id');
+  var hostUrl = currentScript.getAttribute(_data + 'host-url');
+  var tag = currentScript.getAttribute(_data + 'tag');
+  var host = hostUrl || '__COLLECT_API_HOST__' || currentScript.src.split('/').slice(0, -1).join('/');
+  var endpoint = host.replace(/\/$/, '') + '__COLLECT_API_ENDPOINT__';
+  var screen = screenWidth + 'x' + screenHeight;
 
   /* Helper functions */
-  const encode = str => {
+  function encode(str) {
     if (!str) {
       return undefined;
     }
 
     try {
-      const result = decodeURI(str);
+      var result = decodeURI(str);
 
       if (result !== str) {
         return result;
@@ -38,72 +38,76 @@
     }
 
     return encodeURI(str);
-  };
+  }
 
-
-  const parseURL = url => {
+  function parseURL(url) {
     try {
-      const { pathname, search } = new URL(url);
-      url = pathname + search;
+      var a = document.createElement('a');
+      a.href = url;
+      return a.pathname + a.search;
     } catch (e) {
-      /* empty */
+      return url;
     }
-    return url;
-  };
+  }
 
-  const getPayload = () => ({
-    website,
-    hostname,
-    screen,
-    language,
-    title: "",
-    url: encode(currentUrl),
-    referrer: encode(currentRef),
-    tag: tag ? tag : undefined,
-  });
+  function getPayload() {
+    return {
+      website: website,
+      hostname: hostname,
+      screen: screen,
+      language: language,
+      title: "",
+      url: encode(currentUrl),
+      referrer: encode(currentRef),
+      tag: tag ? tag : undefined,
+    };
+  }
 
-  const send = (payload, type = 'event') => {
+  function send(payload, type) {
+    type = type || 'event';
 
     // Prepare the request data
-    const requestData = `{"type":"event","payload":{"website":"${payload.website}","hostname":"${payload.hostname}","screen":"${payload.screen}","language":"${payload.language}","title":"${payload.title}","url":"${payload.url}", "referrer":"${payload.referrer}", "tag":"${payload.tag}"}}`;
+    var requestData = '{"type":"' + type + '","payload":{"website":"' + payload.website + '","hostname":"' + payload.hostname + '","screen":"' + payload.screen + '","language":"' + payload.language + '","title":"' + payload.title + '","url":"' + payload.url + '","referrer":"' + payload.referrer + '","tag":"' + payload.tag + '"}}';
 
-    const headers = {
-      'Content-Type': 'text/plain',
+    var headers = {
+      'Content-Type': 'text/plain'
     };
 
-    try {
-      fetch(endpoint, {
-        method: 'POST',
-        body: requestData,
-        headers,
-      });
-    } catch (e) {
-      /* empty */
+    if (typeof fetch === 'function') {
+      console.log('use fetch');
+      try {
+        fetch(endpoint, {
+          method: 'POST',
+          body: requestData,
+          headers: headers
+        });
+      } catch (e) {
+        /* empty */
+      }
+    } else {
+      try {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", endpoint, false);
+        xhr.setRequestHeader('Content-Type', 'text/plain');
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && (xhr.status >= 200 && xhr.status < 300)) {
+            var text = xhr.responseText;
+            cache = text;
+          }
+        };
+        xhr.send(requestData);
+      } catch (error) {
+        //console.log('error', error);
+      }
     }
+  }
 
+  var currentUrl = parseURL(href);
+  var currentRef = referrer !== hostname ? referrer : '';
+  var cache;
 
-    // try {
-    //   var xhr = new XMLHttpRequest();
-    //   xhr.open("POST", endpoint, false);
-    //   xhr.setRequestHeader('Content-Type', 'text/plain');
-    //   xhr.onreadystatechange = function () {
-    //     if ((this.status >= 200 && this.status < 300)) {
-    //       const text = xhr.responseText;
-    //       cache = text;
-    //     }
-    //   };
-    //   xhr.send(requestData);
-    // } catch (error) {
-    //   //console.log('error', error);
-    // }
-  };
-
-  let currentUrl = parseURL(href);
-  let currentRef = referrer !== hostname ? referrer : '';
-  let cache;
-
-  setTimeout(()=>{
+  setTimeout(function() {
     send(getPayload());
   }, 20);
-  
+
 })(window);
