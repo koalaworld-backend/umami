@@ -60,7 +60,7 @@ const schema = {
       .shape({
         data: yup.object(),
         hostname: yup.string().matches(HOSTNAME_REGEX).max(100),
-        ip: yup.string().matches(IP_REGEX),
+        ip: yup.string(),
         language: yup.string().max(35),
         referrer: yup.string(),
         screen: yup.string().max(11),
@@ -82,7 +82,7 @@ let totalRequestCount = 1;
 let acceptedRequestCount = 1;
 let lastHour = startOfMinute(new Date()).toUTCString();
 
-export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   
   await useCors(req, res);
   
@@ -97,7 +97,16 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
       totalRequestCount = 1;
     }
 
-    await useValidate(schema, req, res);
+    let reqBody = {};
+    try {
+      reqBody = JSON.parse(req.body);
+      console.log(reqBody);
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+    }
+
+    req.body = {...reqBody}
+    let req1 = req as NextApiRequestCollect
 
     if (curHour == lastHour) {
       acceptedRequestCount++;
@@ -111,9 +120,9 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
     const { url, referrer, name: eventName, data, title } = payload;
     const pageTitle = safeDecodeURI(title);
 
-    await useSession(req, res);
+    await useSession(req1, res);
 
-    const session = req.session;
+    const session = req1.session;
     const iat = Math.floor(new Date().getTime() / 1000);
 
     // expire visitId after 30 minutes

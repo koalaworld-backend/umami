@@ -61,7 +61,7 @@
           cache = text;
         }
       };
-      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('Content-Type', 'text/plain');
 
       // Set custom header if cache is defined
       // if (typeof cache !== 'undefined') {
